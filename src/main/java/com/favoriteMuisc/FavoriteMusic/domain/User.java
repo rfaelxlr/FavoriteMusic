@@ -1,14 +1,21 @@
 package com.favoriteMuisc.FavoriteMusic.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.favoriteMuisc.FavoriteMusic.domain.enums.Profile;
 
 @Entity
 public class User implements Serializable {
@@ -24,8 +31,13 @@ public class User implements Serializable {
 	@JsonIgnore
 	private String password;
 	private String picture;
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "PROFILES")
+	private Set<Integer> profiles = new HashSet<>();
+	
 	public User() {
-		
+		addProfile(Profile.USER);
 	}
 	
 	
@@ -36,6 +48,7 @@ public class User implements Serializable {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		addProfile(Profile.USER);
 	}
 
 
@@ -70,6 +83,24 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+
+	public Set<Profile> getProfiles() {
+		return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+	}
+
+	public void addProfile(Profile profile) {
+		profiles.add(profile.getCod());
+	}
+
+	public void setProfiles(Set<Integer> profiles) {
+		this.profiles = profiles;
+	}
+
+	@JsonIgnore
+	public Set<Integer> getProfilesNum() {
+		return profiles;
 	}
 
 
@@ -112,6 +143,8 @@ public class User implements Serializable {
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
-	
+
+
+
 	
 }

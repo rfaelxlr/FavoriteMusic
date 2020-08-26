@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.favoriteMuisc.FavoriteMusic.domain.User;
+import com.favoriteMuisc.FavoriteMusic.dto.UserNewDTO;
 import com.favoriteMuisc.FavoriteMusic.repository.UserRepository;
 import com.favoriteMuisc.FavoriteMusic.service.exceptions.DataIntegrityException;
 import com.favoriteMuisc.FavoriteMusic.service.exceptions.ObjectNotFoundException;
@@ -17,6 +19,9 @@ import com.favoriteMuisc.FavoriteMusic.service.exceptions.ObjectNotFoundExceptio
 public class UserService {
 	@Autowired
 	private UserRepository repo;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	public List<User> findAll() {
 
@@ -27,6 +32,13 @@ public class UserService {
 		Optional<User> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + User.class.getName()));
+	}
+	
+	public User fromDTO(UserNewDTO objDTO) {
+
+		User user = new User(null, objDTO.getUsername(), objDTO.getEmail(), pe.encode(objDTO.getPassword()));
+
+		return user;
 	}
 
 	@Transactional

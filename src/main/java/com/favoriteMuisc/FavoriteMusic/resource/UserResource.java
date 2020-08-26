@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.favoriteMuisc.FavoriteMusic.domain.User;
+import com.favoriteMuisc.FavoriteMusic.dto.UserNewDTO;
 import com.favoriteMuisc.FavoriteMusic.service.UserService;
 
 @RestController
@@ -44,7 +45,8 @@ public class UserResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<User> insert(@Valid @RequestBody User obj) {
+	public ResponseEntity<User> insert(@Valid @RequestBody UserNewDTO objDTO) {
+		User obj = service.fromDTO(objDTO);
 
 		obj = service.insert(obj);
 

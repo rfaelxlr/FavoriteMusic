@@ -9,8 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.favoriteMuisc.FavoriteMusic.domain.Data;
 import com.favoriteMuisc.FavoriteMusic.domain.User;
 import com.favoriteMuisc.FavoriteMusic.dto.UserNewDTO;
+import com.favoriteMuisc.FavoriteMusic.repository.DataRepository;
 import com.favoriteMuisc.FavoriteMusic.repository.UserRepository;
 import com.favoriteMuisc.FavoriteMusic.service.exceptions.DataIntegrityException;
 import com.favoriteMuisc.FavoriteMusic.service.exceptions.ObjectNotFoundException;
@@ -19,6 +21,9 @@ import com.favoriteMuisc.FavoriteMusic.service.exceptions.ObjectNotFoundExceptio
 public class UserService {
 	@Autowired
 	private UserRepository repo;
+	
+	@Autowired
+	private DataRepository dataRepo;
 	
 	@Autowired
 	private BCryptPasswordEncoder pe;
@@ -45,6 +50,10 @@ public class UserService {
 	public User insert(User obj) {
 		obj.setId(null);
 		obj = repo.save(obj);
+		
+		Data data = new Data(obj);
+		data.setId(null);
+		data = dataRepo.save(data);
 		return obj;
 	}
 

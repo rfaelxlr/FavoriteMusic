@@ -1,10 +1,12 @@
 package com.favoriteMuisc.FavoriteMusic.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,7 +15,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.favoriteMuisc.FavoriteMusic.domain.enums.Profile;
 
@@ -24,23 +28,30 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private String username;
 	@Column(unique = true)
 	private String email;
 	@JsonIgnore
 	private String password;
 	private String picture;
-	
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'z'", timezone = "GMT-3")
+	private Instant created_at;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'z'", timezone = "GMT-3")
+	private Instant updated_at;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PROFILES")
 	private Set<Integer> profiles = new HashSet<>();
-	
+
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Data data;
+
 	public User() {
 		addProfile(Profile.USER);
 	}
-	
-	
 
 	public User(Integer id, String username, String email, String password) {
 		super();
@@ -50,8 +61,6 @@ public class User implements Serializable {
 		this.password = password;
 		addProfile(Profile.USER);
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -84,7 +93,6 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
 
 	public Set<Profile> getProfiles() {
 		return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
@@ -103,7 +111,29 @@ public class User implements Serializable {
 		return profiles;
 	}
 
+	public Instant getCreated_at() {
+		return created_at;
+	}
 
+	public void setCreated_at(Instant created_at) {
+		this.created_at = created_at;
+	}
+
+	public Instant getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(Instant updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	public Data getData() {
+		return data;
+	}
+
+	public void setData(Data data) {
+		this.data = data;
+	}
 
 	@Override
 	public int hashCode() {
@@ -112,8 +142,6 @@ public class User implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -132,19 +160,12 @@ public class User implements Serializable {
 		return true;
 	}
 
-
-
 	public String getPicture() {
 		return picture;
 	}
-
-
 
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
-
-
-	
 }

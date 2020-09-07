@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.favoriteMuisc.FavoriteMusic.domain.Data;
 import com.favoriteMuisc.FavoriteMusic.domain.User;
+import com.favoriteMuisc.FavoriteMusic.dto.DataDTO;
 import com.favoriteMuisc.FavoriteMusic.dto.UserNewDTO;
+import com.favoriteMuisc.FavoriteMusic.service.DataService;
 import com.favoriteMuisc.FavoriteMusic.service.UserService;
 
 @RestController
@@ -27,6 +30,9 @@ public class UserResource {
 
 	@Autowired
 	UserService service;
+	
+	@Autowired
+	DataService dataService;
 
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<User>> findAll() {
@@ -43,6 +49,16 @@ public class UserResource {
 
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	@GetMapping(value = "/{id}/data")
+	public ResponseEntity<Data> findData(@PathVariable Integer id) {
+
+		Data obj = dataService.find(id);
+
+		return ResponseEntity.ok().body(obj);
+	}
+	
+	
 
 	@PostMapping
 	public ResponseEntity<User> insert(@Valid @RequestBody UserNewDTO objDTO) {
@@ -61,6 +77,16 @@ public class UserResource {
 		obj = service.update(obj);
 
 		return ResponseEntity.ok().body(obj);
+
+	}
+	
+	@PutMapping(value = "/{id}/data")
+	public ResponseEntity<Data> updateData(@Valid @RequestBody DataDTO objDTO, @PathVariable Integer id) {
+		Data data = dataService.fromDTO(objDTO);
+		data.setId(id);
+		data = dataService.update(data);
+
+		return ResponseEntity.ok().body(data);
 
 	}
 	

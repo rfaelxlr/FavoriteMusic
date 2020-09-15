@@ -1,5 +1,6 @@
 package com.favoriteMuisc.FavoriteMusic.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +57,8 @@ public class DataService {
 		Data newObj = find(obj.getId());
 
 		updateData(newObj, obj);
+		newObj.setUpdated_at(Instant.now());
+
 		return repo.save(newObj);
 	}
 

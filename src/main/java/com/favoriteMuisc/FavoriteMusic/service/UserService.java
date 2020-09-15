@@ -1,5 +1,6 @@
 package com.favoriteMuisc.FavoriteMusic.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,10 +50,14 @@ public class UserService {
 	@Transactional
 	public User insert(User obj) {
 		obj.setId(null);
+		obj.setCreated_at(Instant.now());
+		obj.setUpdated_at(Instant.now());
 		obj = repo.save(obj);
 		
 		Data data = new Data(obj);
 		data.setId(null);
+		data.setCreated_at(Instant.now());
+		data.setUpdated_at(Instant.now());
 		data = dataRepo.save(data);
 		return obj;
 	}
@@ -61,6 +66,8 @@ public class UserService {
 		User newObj = find(obj.getId());
 
 		updateData(newObj, obj);
+		newObj.setUpdated_at(Instant.now());
+
 		return repo.save(newObj);
 	}
 

@@ -1,6 +1,5 @@
 package com.favoriteMuisc.FavoriteMusic.resource;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.favoriteMuisc.FavoriteMusic.domain.Data;
 import com.favoriteMuisc.FavoriteMusic.domain.User;
@@ -66,7 +64,7 @@ public class UserResource {
 
 		obj = service.insert(obj);
 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		//URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 
 		return ResponseEntity.ok().body(obj);
 	}

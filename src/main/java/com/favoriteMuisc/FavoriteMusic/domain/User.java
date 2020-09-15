@@ -3,6 +3,7 @@ package com.favoriteMuisc.FavoriteMusic.domain;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -48,6 +50,10 @@ public class User implements Serializable {
 	@JsonIgnore
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Data data;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private List<Song> songs;
 
 	public User() {
 		addProfile(Profile.USER);
@@ -133,6 +139,14 @@ public class User implements Serializable {
 
 	public void setData(Data data) {
 		this.data = data;
+	}
+
+	public List<Song> getSongs() {
+		return songs;
+	}
+
+	public void setSongs(List<Song> songs) {
+		this.songs = songs;
 	}
 
 	@Override

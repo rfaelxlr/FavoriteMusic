@@ -1,6 +1,7 @@
 package com.favoriteMuisc.FavoriteMusic.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Data implements Serializable {
 
@@ -32,6 +35,11 @@ public class Data implements Serializable {
 	private String favoriteAlbum;
 	private String favoriteBand;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'z'", timezone = "GMT-3")
+	private Instant created_at;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'z'", timezone = "GMT-3")
+	private Instant updated_at;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "FAVORITEMUSICGENRES")
 	private Set<Integer> favoriteMusicGenres = new HashSet<>();
@@ -41,13 +49,13 @@ public class Data implements Serializable {
 	@JoinColumn(name = "user_id")
 	@MapsId
 	private User user;
-	
+
 	public Data() {
-		
+
 	}
-	
+
 	public Data(User user) {
-		this.user= user;
+		this.user = user;
 	}
 
 	public Data(Integer id, String country, String state, String city, String favoriteSong, String favoriteAlbum,
@@ -134,6 +142,22 @@ public class Data implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Instant getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(Instant created_at) {
+		this.created_at = created_at;
+	}
+
+	public Instant getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(Instant updated_at) {
+		this.updated_at = updated_at;
 	}
 
 	@Override
